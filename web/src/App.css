@@ -1,0 +1,20 @@
+* {
+    scroll-behavior: smooth;
+    border: none;
+    outline: none;
+}
+
+body {
+    background: #ffefef;
+    overflow-x: hidden;
+}
+
+a {
+    color: unset;
+    text-decoration: none;
+}
+ul{
+    list-style: none;
+    padding: 0px;
+    margin: 0px;
+}
