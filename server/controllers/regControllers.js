@@ -1,3 +1,4 @@
+/* This is a module exporting several functions related to CRUD operations for a registration system. */
 const Admission = require("../models/regSchemas");
 const createReg = async (req, res) => {
     try {

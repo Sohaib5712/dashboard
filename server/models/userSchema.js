@@ -1,3 +1,6 @@
+/* This is a JavaScript code that defines a Mongoose schema for a user, with fields for username,
+password, and role. It also includes static methods for user signup and login, which use bcrypt to
+hash and compare passwords. Finally, it exports the schema as a Mongoose model called "UserData". */
 const mongoose = require("mongoose");
 const bcrypt = require("bcrypt");
 

@@ -1,3 +1,4 @@
+/* This is a module exporting several functions related to managing user roles. */
 const userRole = require("../models/userRole");
 const UserRole = require("../models/userRole");
 

@@ -1,3 +1,7 @@
+/* This is a router module in Node.js using the Express framework. It defines various routes and their
+corresponding controller functions for handling HTTP requests and responses. The routes include
+operations for creating, reading, updating, and deleting records for students, courses, users,
+roles, and registration. It also includes routes for user authentication and authorization. */
 const express = require("express");
 const router = express.Router();
 

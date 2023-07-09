@@ -1,3 +1,10 @@
+/* This code is defining a Mongoose schema for an admission form, which includes information about a
+student's personal details, academic records, and the course they are applying for. The `mongoose`
+module is being imported and used to define two schemas - `academicRecordSchema` and
+`admissionSchema`. The `admissionSchema` includes fields for personal details such as name, father's
+name, contact information, and academic records. The `academicRecordSchema` is a sub-schema of
+`admissionSchema` and includes fields for a student's degree, institute, year, and marks. Finally,
+the `Admission` model is being exported for use in other parts of the application. */
 const mongoose = require("mongoose");
 
 const academicRecordSchema = new mongoose.Schema({

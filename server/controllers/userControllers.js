@@ -1,3 +1,4 @@
+/* This is a module exporting several functions related to user authentication and management. */
 const User = require("../models/userSchema");
 
 const jwt = require("jsonwebtoken");

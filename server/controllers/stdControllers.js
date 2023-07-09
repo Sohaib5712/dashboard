@@ -1,3 +1,9 @@
+/* This code exports several functions that handle CRUD operations for a student model in a MongoDB
+database. The `const Student = require("../models/adminSchemas");` line imports the student model
+schema from a separate file. The exported functions include `getStudentRecords` to retrieve all
+student records, `getStudentRecord` to retrieve a single student record by ID, `createStudent` to
+create a new student record, `deleteStudent` to delete a student record by ID, `updateCallStatus` to
+update a student's call status, and `updateStudent` to update a student's information. */
 const Student = require("../models/adminSchemas");
 
 
