@@ -11,6 +11,8 @@ import { useAuthContext } from "./hooks/useAuthContext";
 
 import { Student, Course, Login, Signup, User, Role, AddRole, EditStudentPage, AdmissionForm, RegStudent, UpdateReg, EditForm, UpdateCourse, UpdateUser, UpdateRole } from "./pages";
 import { AddForm, CourseForm } from "./components";
+import StdFee from "./pages/fee/StdFee";
+import FeeForm from "./pages/fee/FeeForm";
 
 const App = () => {
   const { user } = useAuthContext();
@@ -41,6 +43,8 @@ const App = () => {
         <Route path="/course-update/:id" element={<UpdateCourse />} />
         <Route path="/user-update/:id" element={<UpdateUser/>} />
         <Route path="/role-update/:id" element={<UpdateRole/>} />
+        <Route path="/std-fee" element={<StdFee/>} />
+        <Route path="/fee-form/:id" element={<FeeForm/>} />
       </Routes>
     </BrowserRouter>
   );

@@ -55,36 +55,34 @@ const createCourse = async (req, res) => {
             });
 
             const cloudinaryUploadResult = await cloudinary.uploader.upload(
-                path.join(__dirname, "../images/course", courseImage), {
+                path.join(__dirname, "../images/course", courseImage),
+                {
                     folder: "course",
                     use_filename: true, // Use the original filename
                 }
-
-                
             );
 
-    // Get the URL of the uploaded image from Cloudinary
-    const courseImageUrl = cloudinaryUploadResult.secure_url;
+            // Get the URL of the uploaded image from Cloudinary
+            const courseImageUrl = cloudinaryUploadResult.secure_url;
 
-    // Create the course record
-    const course = await Course.create({
-        course_name,
-        desc,
-        fee,
-        discount,
-        duration,
-        teacher,
-        courseImage: courseImage, // Store the image filename in the courseImage field
-        courseImageUrl: courseImageUrl, // Store the Cloudinary URL in the courseImageUrl field
-    });
+            // Create the course record
+            const course = await Course.create({
+                course_name,
+                desc,
+                fee,
+                discount,
+                duration,
+                teacher,
+                courseImage: courseImage, // Store the image filename in the courseImage field
+                courseImageUrl: courseImageUrl, // Store the Cloudinary URL in the courseImageUrl field
+            });
 
-    res.status(200).json(course);
-} catch (error) {
-    res.status(400).json({ error: error.message });
-}
+            res.status(200).json(course);
+        } catch (error) {
+            res.status(400).json({ error: error.message });
+        }
     });
 };
-
 
 // get single record
 const getSingleCourse = async (req, res) => {

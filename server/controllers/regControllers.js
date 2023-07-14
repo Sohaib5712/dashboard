@@ -4,31 +4,49 @@ const createReg = async (req, res) => {
     try {
         const admissionData = req.body;
 
-        // Get the current year
-        const currentDate = new Date();
-        const year = currentDate.getFullYear();
+        // Fetch the course fee from the course API based on the selected course
+        const courseResponse = await fetch(
+            `http://localhost:4000/api/admin/course?course=${admissionData.courseAppliedFor}`
+        );
+        const courseData = await courseResponse.json();
+        if (courseResponse.ok) {
+            const courseFee = courseData[0].fee;
 
-        // Get the count of existing records for the current year
-        const count = await Admission.countDocuments({
-            roll_no: { $regex: `^${year}-TS-` },
-        }).exec();
+            // Calculate the discount
+            const installment1 = Number(admissionData.stdFee.first);
+            const installment2 = Number(admissionData.stdFee.second);
+            const totalInstallments = installment1 + installment2;
+            const discount = courseFee - totalInstallments;
 
-        // Generate the roll_no value
-        const roll_no = `${year}-TS-${count + 1}`;
+            // Get the current year
+            const currentDate = new Date();
+            const year = currentDate.getFullYear();
 
-        const admission = new Admission({ ...admissionData, roll_no });
+            // Get the count of existing records for the current year
+            const count = await Admission.countDocuments({
+                roll_no: { $regex: `^${year}-TS-` },
+            }).exec();
 
-        // Validate and sanitize the input data
-        const errors = admission.validateSync();
-        if (errors) {
-            res.status(400).json({ error: "Invalid admission data" });
-            return;
+            // Generate the roll_no value
+            const roll_no = `${year}-TS-${count + 1}`;
+
+            const admission = new Admission({ ...admissionData, roll_no, discount });
+
+            // Validate and sanitize the input data
+            const errors = admission.validateSync();
+            if (errors) {
+                res.status(400).json({ error: "Invalid admission data" });
+                return;
+            }
+
+            // Save the admission record
+            const createdAdmission = await admission.save();
+
+            res.status(201).json(createdAdmission);
+        } else {
+            console.error("Error fetching course data:", courseData.error);
+            res.status(500).json({ error: "Internal server error." });
         }
-
-        // Save the admission record
-        const createdAdmission = await admission.save();
-
-        res.status(201).json(createdAdmission);
     } catch (error) {
         console.error("Error creating admission record:", error);
         res.status(500).json({ error: "Failed to create admission record" });

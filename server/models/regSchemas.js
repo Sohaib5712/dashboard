@@ -85,6 +85,49 @@ const admissionSchema = new mongoose.Schema({
         unique: true,
     },
     academicRecords: [academicRecordSchema],
+    status: {
+        type: String,
+        default: "InProcess",
+    },
+    stdFee: {
+        first: {
+            type: Number,
+        },
+        second: {
+            type: Number,
+        },
+    },
+    discount: {
+        type: Number,
+    },
+    feeStatus:{
+        type: String,
+        default: "None"
+    },
+    payFee:{
+        first:{
+            type:Number
+        },
+        second:{
+            type:Number
+        }
+    },
+    payFeeFrom:{
+        first:{
+            type: String
+        },
+        second:{
+            type: String
+        }
+    },
+    feeDate:{
+        first:{
+            type: Date
+        },
+        second:{
+            type: Date
+        }
+    }
 });
 
 const Admission = mongoose.model("Admission", admissionSchema);

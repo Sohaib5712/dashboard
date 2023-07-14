@@ -62,7 +62,7 @@ const Course = () => {
     // delete the slected row
     const handleDeleteCourse = async (courseId) => {
         try {
-            const response = await fetch(`/api/admin/course/${courseId}`, {
+            const response = await fetch(`http://localhost:4000/api/admin/course/${courseId}`, {
                 method: 'DELETE',
             });
             const json = await response.json();

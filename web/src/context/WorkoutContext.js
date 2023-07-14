@@ -11,7 +11,7 @@ export const workoutsReducer = (state, action) => {
             return {
                 students: action.payload,
             };
-            
+
         case "UPDATE_WORKOUT":
             const updatedStudents = state.students.map((student) => {
                 if (student._id === action.payload.studentId) {
@@ -33,6 +33,21 @@ export const workoutsReducer = (state, action) => {
             return {
                 students: filteredStudents,
             };
+
+        case "UPDATE_STATUS":
+            const updatedStatusStudents = state.students.map((student) => {
+                if (student._id === action.payload.studentId) {
+                    return {
+                        ...student,
+                        status: action.payload.status,
+                    };
+                }
+                return student;
+            });
+            return {
+                students: updatedStatusStudents,
+            };
+
         default:
             return state;
     }

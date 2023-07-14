@@ -126,3 +126,20 @@ button[type='submit']:hover {
     color: #f6f6f6;
     border-radius: 5px;
 }
+.status-btn{
+    align-items: center;
+    margin-top: 0.3rem;
+    margin-left: 0.5rem;
+}
+.status-update{
+    background-color: rgb(22, 134, 22);
+    color: white;
+    border-radius: 5px;
+}
+
+.status-cancel{
+    background-color: rgb(212, 51, 51);
+    color: white;
+    border-radius: 5px;
+    margin-left: .5rem;
+}

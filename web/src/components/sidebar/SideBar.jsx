@@ -36,6 +36,12 @@ const SideBar = ({ role }) => {
                     </li>
                 </Link>
                 <hr className="sidebar-line" />
+                <Link to="/std-fee">
+                    <li>
+                        Student Fee
+                    </li>
+                </Link>
+                <hr className="sidebar-line" />
                 {role === 'admin' && (
                     <>
                         <Link to="/course">

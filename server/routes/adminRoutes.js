@@ -58,6 +58,7 @@ router.get("/register/:id", getRegstudentRecord);
 // for update reg student
 router.put("/register/:id", updateRegStudent);
 
+
 // user.............
 
 // login

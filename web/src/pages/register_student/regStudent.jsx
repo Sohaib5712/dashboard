@@ -1,14 +1,9 @@
-/* The above code is a React component that displays a table of registered students. It fetches the
-student data from an API and displays it in a table. It also allows the user to add, edit, and
-delete student records. The component also displays a modal with detailed information about a
-selected student when the user clicks on the "eye" icon. The component uses various React hooks such
-as useState, useEffect, and useContext to manage state and fetch data. */
 import { useEffect, useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { useAuthContext } from '../../hooks/useAuthContext';
 import { SideBar, Header } from '../../components';
 import { useWorkoutsContext } from '../../hooks/useWorkoutContext';
-import { RiQuillPenFill, RiDeleteBinLine, RiEyeFill } from 'react-icons/ri';
+import { RiQuillPenFill, RiDeleteBinLine, RiEyeFill, RiCloseFill, RiCheckFill } from 'react-icons/ri';
 import Modal from 'react-modal';
 
 const RegStudent = () => {
@@ -19,6 +14,8 @@ const RegStudent = () => {
     const [userRole, setUserRole] = useState([]);
     const [modalOpen, setModalOpen] = useState(false);
     const [selectedUser, setSelectedUser] = useState(null);
+    const [dropdownOpen, setDropdownOpen] = useState(Array(students.length).fill(false));
+    const [selectedStatus, setSelectedStatus] = useState('');
 
     const openModal = (user) => {
         setSelectedUser(user);
@@ -34,14 +31,17 @@ const RegStudent = () => {
         navigate(`/reg-update/${rowId}`);
     };
 
-    // Fetch user data and set user role
+/* The above code is a React useEffect hook that fetches user data from an API endpoint. It checks if
+the `user` object exists and if it does, it makes a GET request to
+`http://localhost:4000/api/admin/user/{user.user}`. If the response is successful, it extracts the
+user's role from the response data and sets it using the `setUserRole` function. If there is an
+error in the response, it logs the error message to the console. The useEffect hook is triggered
+whenever the `user` object changes. */
     useEffect(() => {
         const fetchUser = async () => {
             try {
                 if (user?.user) {
-                    const response = await fetch(
-                        `http://localhost:4000/api/admin/user/${user.user}`
-                    );
+                    const response = await fetch(`http://localhost:4000/api/admin/user/${user.user}`);
                     const data = await response.json();
                     if (response.ok) {
                         const userRole = data.users['role'];
@@ -60,12 +60,9 @@ const RegStudent = () => {
     // Delete row
     const handleDeleteStudent = async (studentId) => {
         try {
-            const response = await fetch(
-                `http://localhost:4000/api/admin/register/${studentId}`,
-                {
-                    method: 'DELETE',
-                }
-            );
+            const response = await fetch(`http://localhost:4000/api/admin/register/${studentId}`, {
+                method: 'DELETE',
+            });
             const json = await response.json();
             if (response.ok) {
                 dispatch({ type: 'DELETE_STUDENT', payload: studentId });
@@ -78,17 +75,15 @@ const RegStudent = () => {
     };
 
     // Fetch register student data
-    
-/**
- * This function fetches data from a specified API endpoint and dispatches the retrieved data to a
- * Redux store.
- */
+
+    /**
+     * This function fetches data from a specified API endpoint and dispatches the retrieved data to a
+     * Redux store.
+     */
     useEffect(() => {
         const fetchStudents = async () => {
             try {
-                const response = await fetch(
-                    'http://localhost:4000/api/admin/register'
-                );
+                const response = await fetch('http://localhost:4000/api/admin/register');
                 const json = await response.json();
                 if (response.ok) {
                     dispatch({ type: 'SET_WORKOUTS', payload: json });
@@ -101,10 +96,53 @@ const RegStudent = () => {
         fetchStudents();
     }, [dispatch]);
 
+/**
+ * The `formatDate` function takes a date string as input and returns a formatted date string in the
+ * format "MM/DD/YYYY".
+ * @returns The function `formatDate` returns a formatted date string in the format "MM/DD/YYYY".
+ */
     const formatDate = (dateString) => {
         const options = { year: 'numeric', month: '2-digit', day: '2-digit' };
         const date = new Date(dateString);
         return date.toLocaleDateString(undefined, options);
+    };
+
+/**
+ * The function `handleStatusChange` updates the selected status and the dropdown open state in a React
+ * component.
+ */
+    const handleStatusChange = (event, index) => {
+        setSelectedStatus(event.target.value);
+        const updatedDropdownOpen = [...dropdownOpen];
+        setDropdownOpen(updatedDropdownOpen);
+    };
+
+/**
+ * The function `handleStatusUpdate` is an asynchronous function that sends a PUT request to update the
+ * status of a student and handles the response accordingly.
+ */
+    const handleStatusUpdate = async (studentId, index) => {
+        try {
+            const response = await fetch(`http://localhost:4000/api/admin/register/${studentId}`, {
+                method: 'PUT',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({ status: selectedStatus }),
+            });
+            const json = await response.json();
+            if (response.ok) {
+                dispatch({ type: 'UPDATE_STATUS', payload: { studentId, status: selectedStatus } });
+                setSelectedStatus('');
+                const updatedDropdownOpen = [...dropdownOpen];
+                updatedDropdownOpen[index] = false; // Close the dropdown after updating the status
+                setDropdownOpen(updatedDropdownOpen);
+            } else {
+                console.error(json.error);
+            }
+        } catch (error) {
+            console.error('Update Error:', error);
+        }
     };
 
     return (
@@ -131,6 +169,7 @@ const RegStudent = () => {
                             <th>Father Name</th>
                             <th>Phone Number</th>
                             <th>Email</th>
+                            <th>Status</th>
                             <th>Action</th>
                         </tr>
                     </thead>
@@ -146,6 +185,58 @@ const RegStudent = () => {
                                     <td>{user.fatherName}</td>
                                     <td>{user.contactNumber}</td>
                                     <td>{user.email}</td>
+                                    <td className="student-status">
+                                        {dropdownOpen[index] ? (
+                                            <div className="status-dropdown">
+                                                <select
+                                                    className="status-select"
+                                                    value={selectedStatus}
+                                                    onChange={(event) => handleStatusChange(event, index)}
+                                                >
+                                                    <option value="InProcess">InProcess</option>
+                                                    <option value="PassOut">PassOut</option>
+                                                    <option value="BlackList">BlackList</option>
+                                                    <option value="DropOut">DropOut</option>
+                                                </select>
+                                                <div className="status-btn">
+                                                <button
+                                                    className="status-update"
+                                                    onClick={() => handleStatusUpdate(user._id, index)}
+                                                >
+                                                    <RiCheckFill/>
+                                                </button>
+                                                <button
+                                                    className="status-cancel"
+                                                    onClick={() => {
+                                                        const updatedDropdownOpen = [...dropdownOpen];
+                                                        updatedDropdownOpen[index] = false; // Close the dropdown without updating
+                                                        setDropdownOpen(updatedDropdownOpen);
+                                                    }}
+                                                >
+                                                    <RiCloseFill />
+                                                </button>
+                                                </div>
+                                            </div>
+                                        ) : (
+                                            <div className="status-text">
+                                                {user.status}
+                                                <span
+                                                    className="status-change-icon"
+                                                    onClick={() => {
+                                                        const updatedDropdownOpen = [...dropdownOpen];
+                                                        updatedDropdownOpen[index] = true; // Open the dropdown for the clicked row
+                                                        setDropdownOpen(updatedDropdownOpen);
+                                                    }}
+                                                >
+                                                        <RiQuillPenFill
+                                                            size={25}
+                                                            color="#FFB400"
+                                                            style={{ margin: '0px .2rem' }}
+                                                        />
+                                                </span>
+                                            </div>
+                                        )}
+                                    </td>
                                     <td className="student-field-action">
                                         <RiEyeFill
                                             size={25}
@@ -195,7 +286,7 @@ const RegStudent = () => {
                         </div>
                         <h1>Personal Information</h1>
                         <li>
-                            <span>Studennt Name: </span>
+                            <span>Student Name: </span>
                             {selectedUser.name}
                         </li>
                         <li>
@@ -234,7 +325,7 @@ const RegStudent = () => {
                         </li>
                         <li>
                             <span>Father's Numbers: </span>
-                            {selectedUser.fatherName}
+                            {selectedUser.fatherNumber}
                         </li>
                     </ul>
 

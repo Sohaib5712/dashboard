@@ -68,6 +68,10 @@ const AdmissionForm = () => {
         fatherNumber: '',
         email: '',
         academicRecords: [],
+        stdFee: {
+            first: '',
+            second: ''
+        }
     });
 
     const handleAcademicRecordChange = (index, field, value) => {
@@ -87,9 +91,29 @@ const AdmissionForm = () => {
         setFormData({ ...formData, academicRecords: updatedAcademicRecords });
     };
 
+/**
+ * The handleChange function updates the form data based on the input value and name.
+ */
     const handleChange = (e) => {
-        setFormData({ ...formData, [e.target.name]: e.target.value });
+        const { name, value } = e.target;
+
+        if (name === 'first' || name === 'second') {
+            setFormData((prevFormData) => ({
+                ...prevFormData,
+                stdFee: {
+                    ...prevFormData.stdFee,
+                    [name]: value,
+                },
+            }));
+        } else {
+            setFormData((prevFormData) => ({
+                ...prevFormData,
+                [name]: value,
+            }));
+        }
     };
+
+
 
     const handleSubmit = async (e) => {
         e.preventDefault();
@@ -121,6 +145,10 @@ const AdmissionForm = () => {
                     fatherNumber: '',
                     email: '',
                     academicRecords: [],
+                    stdFee: {
+                        first: '',
+                        second: ''
+                    }
                 });
                 navigate('/reg-student');
             } else {
@@ -345,6 +373,32 @@ const AdmissionForm = () => {
                         <button type="button" className='acd-add-btn' onClick={handleAddAcademicRecord}>
                             Add Academic Record
                         </button>
+
+                        <h3>Fee</h3>
+                        <div className="form-row">
+                            <div className="form-group">
+                                <label htmlFor="installment1">Installment 1</label>
+                                <input
+                                    type="number"
+                                    id="installment1"
+                                    name="first"
+                                    value={formData.stdFee.first}
+                                    onChange={handleChange}
+                                    required
+                                />
+                            </div>
+                            <div className="form-group">
+                                <label htmlFor="installment2">Installment 2</label>
+                                <input
+                                    type="number"
+                                    id="installment2"
+                                    name="second"
+                                    value={formData.stdFee.second}
+                                    onChange={handleChange}
+                                    required
+                                />
+                            </div>
+                        </div>
                         <button className='add-btn' type="submit">Submit</button>
                     </form>
                 </div>

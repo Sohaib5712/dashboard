@@ -7,7 +7,7 @@ When the form is submitted, it sends a PUT request to update the student record 
 import React, { useState, useEffect } from 'react';
 import { useParams } from 'react-router-dom';
 import { useNavigate } from 'react-router-dom';
-import { RiCloseFill } from "react-icons/ri";
+import { RiCloseFill } from 'react-icons/ri';
 import { useAuthContext } from '../../hooks/useAuthContext';
 import { SideBar, Header } from '../../components';
 
@@ -17,14 +17,13 @@ const UpdateReg = () => {
     const { id } = useParams();
     const [student, setStudent] = useState(null);
     const navigate = useNavigate();
+
     // Fetch user data and set user role
     useEffect(() => {
         const fetchUser = async () => {
             try {
                 if (user?.user) {
-                    const response = await fetch(
-                        `http://localhost:4000/api/admin/user/${user.user}`
-                    );
+                    const response = await fetch(`http://localhost:4000/api/admin/user/${user.user}`);
                     const data = await response.json();
                     if (response.ok) {
                         const userRole = data.users['role'];
@@ -40,13 +39,19 @@ const UpdateReg = () => {
         fetchUser();
     }, [user]);
 
-    // fetxh single std data 
+    // Fetch student data
+/* The above code is using the useEffect hook in React to fetch a student record from a server. It
+makes an asynchronous request to the specified URL
+(`http://localhost:4000/api/admin/register/`) using the fetch function. If the response is
+successful (status code 200), it sets the fetched student data to the state variable `student` using
+the `setStudent` function. If the response is not successful, it logs the error message from the
+server. If there is an error during the fetch request, it logs an error message to the console. The
+useEffect hook is triggered whenever */
     useEffect(() => {
         const fetchStudent = async () => {
             try {
-                const response = await fetch(`/api/admin/register/${id}`); // Update the endpoint URL accordingly
+                const response = await fetch(`http://localhost:4000/api/admin/register/${id}`);
                 const data = await response.json();
-                console.log(data)
                 if (response.ok) {
                     setStudent(data.student);
                 } else {
@@ -60,10 +65,21 @@ const UpdateReg = () => {
     }, [id]);
 
     const handleChange = (e) => {
-        setStudent((prevStudent) => ({
-            ...prevStudent,
-            [e.target.name]: e.target.value,
-        }));
+        const { name, value } = e.target;
+        if (name.startsWith("installment")) {
+            setStudent((prevStudent) => ({
+                ...prevStudent,
+                stdFee: {
+                    ...prevStudent.stdFee,
+                    [name]: value,
+                },
+            }));
+        } else {
+            setStudent((prevStudent) => ({
+                ...prevStudent,
+                [name]: value,
+            }));
+        }
     };
 
     const handleSubmit = async (e) => {
@@ -115,7 +131,6 @@ const UpdateReg = () => {
             academicRecords: updatedAcademicRecords,
         }));
     };
-
     return (
         <div className="student-page">
             <SideBar role={userRole} />
@@ -330,6 +345,34 @@ const UpdateReg = () => {
                             >
                                 Add Academic Record
                             </button>
+
+                            {/* Fee Information */}
+                            <h3>Fee Information</h3>
+                            <div className="form-row">
+                                <div className="form-group">
+                                    <label htmlFor="installment1">Installment 1</label>
+                                    <input
+                                        type="number"
+                                        id="installment1"
+                                        name="first"
+                                        value={student.stdFee.first}
+                                        onChange={handleChange}
+                                        required
+                                    />
+                                </div>
+                                <div className="form-group">
+                                    <label htmlFor="installment2">Installment 2</label>
+                                    <input
+                                        type="number"
+                                        id="installment2"
+                                        name="second"
+                                        value={student.stdFee.second}
+                                        onChange={handleChange}
+                                        required
+                                    />
+                                </div>
+
+                            </div>
                             <button className="add-btn" type="submit">Submit</button>
                         </form>
                     </div>
