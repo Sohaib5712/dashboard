@@ -1,3 +1,9 @@
+/* This code exports several functions that handle CRUD operations for a student model in a MongoDB
+database. The `const Student = require("../models/adminSchemas");` line imports the student model
+schema from a separate file. The exported functions include `getStudentRecords` to retrieve all
+student records, `getStudentRecord` to retrieve a single student record by ID, `createStudent` to
+create a new student record, `deleteStudent` to delete a student record by ID, `updateCallStatus` to
+update a student's call status, and `updateStudent` to update a student's information. */
 const Student = require("../models/adminSchemas");
 
 
@@ -87,31 +93,11 @@ const updateStudent = async (req, res) => {
     res.status(200).json({ student });
 };
 
-// search student
-const searchStd = async (req, res) => {
-    try {
-      const regex = new RegExp(req.params.key, "i"); // "i" flag makes the regex case-insensitive
-      const data = await Student.find({
-        $or: [{ name: { $regex: regex } }]
-      });
-      res.json(data);
-    } catch (error) {
-      console.error("Error during search:", error);
-      res.status(500).json({ error: "An error occurred during the search" });
-    }
-  };
-
-
-// create new student record
-
-
-module.exports = { 
-createStudent,
-getStudentRecords,
-getStudentRecord,
-deleteStudent,
-updateCallStatus,
-updateStudent,
-searchStd,
+module.exports = {
+    createStudent,
+    getStudentRecords,
+    getStudentRecord,
+    deleteStudent,
+    updateCallStatus,
+    updateStudent,
 };
-

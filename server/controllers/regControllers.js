@@ -1,3 +1,4 @@
+/* This is a module exporting several functions related to CRUD operations for a registration system. */
 const Admission = require("../models/regSchemas");
 const createReg = async (req, res) => {
     try {
@@ -52,8 +53,6 @@ const createReg = async (req, res) => {
     }
 };
 
-
-
 // get all reg student
 const getRegRecord = async (req, res) => {
     const reg = await Admission.find({});
@@ -97,33 +96,6 @@ const updateRegStudent = async (req, res) => {
 
     res.status(200).json({ student });
 };
-// search student
-const searchStudent = async (req, res) => {
-    try {
-      const regex = new RegExp(req.params.key, "i"); // "i" flag makes the regex case-insensitive
-      const data = await Admission.find({
-        $or: [{ roll_no: { $regex: regex } }]
-      });
-      res.json(data);
-    } catch (error) {
-      console.error("Error during search:", error);
-      res.status(500).json({ error: "An error occurred during the search" });
-    }
-  };
-  
-  const checkEnrollment = async (req, res) => {
-    const { name } = req.body;
-    try {
-      const student = await Admission.findOne({ name });
-      if (student) {
-        res.status(200).json({ result: "You are enrolled!" });
-      } else {
-        res.status(200).json({ result: "You are not enrolled!" });
-      }
-    } catch (error) {
-      res.status(400).json({ error: "Error finding enrollment record" });
-    }
-  };
 
 module.exports = {
     createReg,
@@ -131,6 +103,4 @@ module.exports = {
     deleteRegstudent,
     getRegstudentRecord,
     updateRegStudent,
-    searchStudent,
-    checkEnrollment
 };

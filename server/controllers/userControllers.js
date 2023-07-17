@@ -1,3 +1,4 @@
+/* This is a module exporting several functions related to user authentication and management. */
 const User = require("../models/userSchema");
 
 const jwt = require("jsonwebtoken");
@@ -51,48 +52,34 @@ const getUserRecord = async (req, res) => {
     if (!users) {
         return res.status(400).json({ error: "no Record Found!!!" });
     }
-
     res.status(200).json({ users });
 };
 
 
-// send maill
-const sendMail = async  (req, res) => {
+// delete row
+const deleteUser = async (req, res) => {
+    const { id } = req.params;
+    const user = await User.findByIdAndDelete({ _id: id });
+    if (!user) {
+        return res.status(400).json({ error: "no Record Found!!!" });
+    }
 
-    // const { email } = req.body;
-    console.log("okkkk")
+    res.status(200).json({ user });
+};
 
+// update reg user
+const updateUser = async (req, res) => {
+    const { id } = req.params;
 
-    // try {
+    const user = await User.findOneAndUpdate({ user: id }, req.body, {
+        new: true,
+    });
 
-    //     const transporter = nodemailer.createTransport({
-    //         service: "gmail",
-    //         auth: {
-    //             user: 'joe.arthur2361@gmail.com',
-    //             pass: '!Wasd@6996#'
-    //         }
-    //     });
+    if (!user) {
+        return res.status(400).json({ error: "No record found!!!" });
+    }
 
-    //     const mailOptions = {
-    //         from: 'joe.arthur2361@gmail.com',
-    //         to: email,
-    //         subject: "Sending Email With React And Nodejs",
-    //         html: '<h1>Congratulation</h1> <h1> You successfully sent Email </h2>'
-    //     };
-
-    //     transporter.sendMail(mailOptions, (error, info) => {
-    //         if (error) {
-    //             console.log("Error" + error)
-    //         } else {
-    //             console.log("Email sent:" + info.response);
-    //             res.status(201).json({status:201,info})
-    //         }
-    //     })
-
-    // } catch (error) {
-    //     console.log("Error" + error);
-    //     res.status(401).json({status:401,error})
-    // }
+    res.status(200).json({ user });
 };
 
 
@@ -101,5 +88,6 @@ module.exports = {
     signupUser,
     getUserRecords,
     getUserRecord,
-    sendMail
+    updateUser,
+    deleteUser
 };

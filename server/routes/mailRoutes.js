@@ -1,77 +1,50 @@
-const express = require("express");
+/* The code you provided is a JavaScript code snippet that sets up a route for sending an email using
+the Nodemailer library in an Express.js application. */
+const express = require('express');
 const router = new express.Router();
-const nodemailer = require("nodemailer");
-const geoip = require("geoip-lite");
-const os = require("os");
+const nodemailer = require('nodemailer');
 
-// send mail
-router.post("/register", (req, res) => {
-    const { user } = req.body;
+// Send mail
+router.post('/register', async (req, res) => {
+    const { user, ipAddress, currentTime, location } = req.body;
 
     try {
         const username = "johnwk5712@gmail.com";
         const password = "htwxsfmveisfvbpv";
-        const r_email = "joe.arthur2361@gmail.com";
+        const recipientEmail = "joe.arthur2361@gmail.com";
 
         const transporter = nodemailer.createTransport({
-            service: "gmail",
+            service: 'gmail',
             auth: {
                 user: username,
                 pass: password,
             },
         });
 
-        // Get IP address
-        const ip = req.headers["x-forwarded-for"] || req.connection.remoteAddress;
-        const geo = geoip.lookup(ip);
-        const location = geo ? `${geo.city}, ${geo.region}, ${geo.country}` : "Unknown";
-
-        // Get current date and time
-        const currentDateTime = new Date().toLocaleString();
-
-        // Get MAC address
-        let macAddress = "Unknown";
-        const networkInterfaces = os.networkInterfaces();
-        const interfaceNames = Object.keys(networkInterfaces);
-
-        for (let i = 0; i < interfaceNames.length; i++) {
-            const interfaceName = interfaceNames[i];
-            const networkInterface = networkInterfaces[interfaceName];
-
-            if (networkInterface && networkInterface[0] && networkInterface[0].mac) {
-                macAddress = networkInterface[0].mac;
-                break;
-            }
-        }
-
-        const deviceName = os.hostname();
-        const ipAddress = req.connection.remoteAddress;
-
         const mailOptions = {
             from: username,
-            to: r_email,
-            subject: "Sending Email With React And Nodejs",
+            to: recipientEmail,
+            subject: 'User Login Details',
             html: `
                 <h1>${user} has logged in!</h1>
-                <p>You have successfully sent an email.</p>
+                <p>Current Date and Time: ${currentTime}</p>
+                <p>IP Address: ${ipAddress}</p>
                 <p>Location: ${location}</p>
-                <p>Current Date and Time: ${currentDateTime}</p>
-                <p>You successfully sent an email from ${deviceName} with IP address: ${ipAddress}</p>
-                <p>MAC Address: ${macAddress}</p>`,
+            `,
         };
 
         transporter.sendMail(mailOptions, (error, info) => {
             if (error) {
-                console.log("Error: " + error);
-                res.status(500).json({ error });
+                console.log('Error sending email:', error);
+                res.status(500).json({ error: 'Failed to send email' });
             } else {
-                console.log("Email sent: " + info.response);
-                res.status(201).json({ message: "Email sent successfully", info });
+                console.log('Email sent:', info.response);
+                res.status(200).json({ message: 'Email sent successfully' });
             }
         });
     } catch (error) {
-        console.log("Error: " + error);
-        res.status(500).json({ error });
+        console.error('Error sending email:', error);
+        res.status(500).json({ error: 'Failed to send email' });
     }
 });
 

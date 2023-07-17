@@ -1,3 +1,7 @@
+/* This is a router module in Node.js using the Express framework. It defines various routes and their
+corresponding controller functions for handling HTTP requests and responses. The routes include
+operations for creating, reading, updating, and deleting records for students, courses, users,
+roles, and registration. It also includes routes for user authentication and authorization. */
 const express = require("express");
 const router = express.Router();
 
@@ -8,7 +12,6 @@ const {
     deleteStudent,
     updateStudent,
     updateCallStatus,
-    searchStd,
 } = require("../controllers/stdControllers");
 
 const {
@@ -24,12 +27,16 @@ const {
     loginUser,
     getUserRecord,
     getUserRecords,
-    sendMail
+    updateUser,
+    deleteUser
 } = require("../controllers/userControllers");
 
 const {
     getRoleRecord,
     createRoleRecord,
+    updateRole,
+    deleteRole,
+    getRole
 } = require("../controllers/roleControllers");
 
 const {
@@ -38,8 +45,6 @@ const {
     deleteRegstudent,
     getRegstudentRecord,
     updateRegStudent,
-    searchStudent,
-    checkEnrollment,
 } = require("../controllers/regControllers");
 
 // for admission student
@@ -51,7 +56,7 @@ router.delete("/register/:id", deleteRegstudent);
 // get single record
 router.get("/register/:id", getRegstudentRecord);
 // for update reg student
-router.patch("/register/:id", updateRegStudent);
+router.put("/register/:id", updateRegStudent);
 
 
 // user.............
@@ -67,12 +72,30 @@ router.get("/user", getUserRecords);
 
 // get single user
 router.get("/user/:id", getUserRecord);
+// to delete the record user
+router.delete("/user/:id", deleteUser);
+// to update user
+router.put("/user/:id", updateUser);
 
+
+// rolllllllllllle
 // get role
 router.get("/role", getRoleRecord);
-
+// get single role
+router.get("/role/:id", getRole);
 // gell all role record
 router.post("/addrole", createRoleRecord);
+// to delete the record user
+router.delete("/role/:id", deleteRole);
+// to update user
+router.put("/role/:id", updateRole);
+
+
+
+
+
+
+
 
 // course...........
 
@@ -108,11 +131,6 @@ router.put("/update/:id", updateStudent);
 // to update a call status.
 router.post("/:id", updateCallStatus);
 
-router.get('/search/:key',searchStudent)
-
-router.get('/simpleSearch/:key',searchStd)
-// verifyStudent
-router.post("/register/check-enrollment", checkEnrollment);
 
 
 
