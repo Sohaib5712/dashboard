@@ -1,5 +1,5 @@
 /* This is a module exporting several functions related to managing user roles. */
-const userRole = require("../models/userRole");
+// const userRole = require("../models/userRole");
 const UserRole = require("../models/userRole");
 
 // Role.....
@@ -27,7 +27,7 @@ const createRoleRecord = async (req, res) => {
 // get single record
 const getRole = async (req, res) => {
     const { id } = req.params;
-    const role = await userRole.findById({ _id: id });
+    const role = await UserRole.findById({ _id: id });
     if (!role) {
         return res.status(400).json({ error: "no Record Found!!!" });
     }
@@ -38,7 +38,7 @@ const getRole = async (req, res) => {
 // delete row
 const deleteRole = async (req, res) => {
     const { id } = req.params;
-    const user = await userRole.findByIdAndDelete({ _id: id });
+    const user = await UserRole.findByIdAndDelete({ _id: id });
     if (!user) {
         return res.status(400).json({ error: "no Record Found!!!" });
     }
@@ -50,7 +50,7 @@ const deleteRole = async (req, res) => {
 const updateRole = async (req, res) => {
     const { id } = req.params;
 
-    const user = await userRole.findByIdAndUpdate({ _id: id }, req.body, {
+    const user = await UserRole.findByIdAndUpdate({ _id: id }, req.body, {
         new: true,
     });
 

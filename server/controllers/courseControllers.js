@@ -3,6 +3,7 @@ using Mongoose. The functions include getting all course records, creating a new
 getting a single course record by ID, deleting a single course record by ID, and updating a course
 record by ID. */
 const Course = require("../models/adminCourse");
+
 const path = require("path");
 const multer = require("multer");
 
