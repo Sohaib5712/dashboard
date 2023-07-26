@@ -1,15 +1,14 @@
-/* This is a Node.js server code using the Express framework. It creates an instance of the Express
-application, sets up middleware, defines routes using the adminRoutes and mailRoutes modules, and
-starts the server listening on port 4000. The `cors` middleware is used to enable Cross-Origin
-Resource Sharing. The `express.json()` middleware is used to parse incoming JSON requests. */
 const express = require('express');
 require('./connect')
 const app = express();
 const port = 4000;
 const cors = require("cors")
 const adminRoutes = require('./routes/adminRoutes')
+const blogRoute = require('./routes/blogRoutes')
+const newsRoute = require('./routes/news')
+const facultyRoute = require('./routes/fculty')
 const mailRoutes = require('./routes/mailRoutes')
-
+const {join} = require('path')
 
 
 
@@ -18,9 +17,14 @@ const mailRoutes = require('./routes/mailRoutes')
 app.use(express.json())
 
 app.use(cors());
+app.use(express.urlencoded({extended:false}))
 
 app.use('/api/admin',adminRoutes)
+app.use('/api/blog',blogRoute)
+app.use('/api/news',newsRoute)
+app.use('/api/faculty',facultyRoute)
 app.use(mailRoutes)
+app.use(express.static('./uploads'))
 
 // Start the server
 app.listen(port, () => {
